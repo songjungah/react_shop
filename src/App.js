@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container, Col, Row, Nav, Navbar, Button} from 'react-bootstrap'
 import './App.css';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import DetailPage from './pages/Detail.js';
 // css를 제공해주는 사이트 : bootstrap
 // npm install react-bootstrap bootstrap
 
@@ -14,38 +16,65 @@ import {num1, num2, num3} from './data.js'
 import 작명 from './main.jpg';      // 이미지 import
 import { useState } from 'react';
 
+
+// 라우터는 창을 새로 불러오는게 아니라 재렌더링 방식을 사용함
+// 되게 빠르게 적용 가능
+
 function App() {
 
   let [items, setItems] = useState(data);   // data는 변수니까 state로
-  let [photo, setPhoto] = useState([]);
+  let [photo, setPhoto] = useState(['/dog1.jpg','/dog2.jpg','/dog3.jpg']); // useState import
+  let navigate = useNavigate()
 
   return (
     <div className="App">
       <Navbar bg="dark" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand href="#home">브랜드로고이미지</Navbar.Brand>
+          <Navbar.Brand href="/"><img src={'/logo192.png'} width={'50px'} height={'50px'} /></Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="#home">홈</Nav.Link>
-            <Nav.Link href="#features">상세페이지</Nav.Link>
-            <Nav.Link href="#pricing">About</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/')}}>홈</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/detail')}}>상세페이지</Nav.Link>
+            <Nav.Link onClick={()=>{navigate('/about')}}>About</Nav.Link>
+            <Nav.Link onClick={()=>{navigate(-1)}}>뒤로가기</Nav.Link>
+            <Nav.Link onClick={()=>{navigate(1)}}>앞으로가기</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
-
+      
+      <Routes>
+        <Route path='/' element={
+          <>
+            
       <div className={'main-bg'}></div>
       <Container>
         <Row>
-          {/* data 갯수와 image 가 바쓀 수 있으니까 useState 처리 */}
+          {/* data 갯수와 image 가 바쓀 수 있으니까 useState 처리 
+          data : 변수(사용자 입력 또는 서버로 부터 데이터를 받았을 때
+          변경이 되어도 화면은 안바뀜 --> useState 로 변경*/}
           {/* map 을 통해서 ItemCol */}
-          <ItemCol data={data[0]} img={'/dog1.jpg'} />
+          {
+            items.map((e, idx)=>{
+              return(
+                <ItemCol data={e} img={photo[idx]} key={e} />
+              )
+            })
+          }
+          {/* <ItemCol data={data[0]} img={'/dog1.jpg'} />
           <ItemCol data={data[1]} img={'/dog2.jpg'} />
-          <ItemCol data={data[2]} img={'/dog3.jpg'} />
+          <ItemCol data={data[2]} img={'/dog3.jpg'} /> */}
         </Row>
       </Container>
+          </>
+        }>
+      </Route>
+        
+        <Route path='/detail' element={<DetailPage items={items}/>}></Route>
+      </Routes>
+
       
 
       <br/>
-      <Button variant="primary">기본버튼</Button>{' '}
+      {/* <Button variant="primary">기본버튼</Button>{' '} */}
 
 
     </div>
