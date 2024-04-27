@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container, Col, Row, Nav, Navbar, Button} from 'react-bootstrap'
 import './App.css';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 import DetailPage from './pages/Detail.js';
 // css를 제공해주는 사이트 : bootstrap
 // npm install react-bootstrap bootstrap
@@ -23,7 +23,7 @@ import { useState } from 'react';
 function App() {
 
   let [items, setItems] = useState(data);   // data는 변수니까 state로
-  let [photo, setPhoto] = useState(['/dog1.jpg','/dog2.jpg','/dog3.jpg']); // useState import
+  let [photo, setPhoto] = useState(['/dog1.jpg','/dog2.jpg','/dog3.jpg','/logo192.png']); // useState import
   let navigate = useNavigate()
 
   return (
@@ -67,11 +67,23 @@ function App() {
           </>
         }>
       </Route>
-        
-        <Route path='/detail' element={<DetailPage items={items}/>}></Route>
+
+      {/* :id   ==>   URL 파라미터를 통해서 상세아이템 변경 */}
+        <Route path='/detail/:pageNum' element={<DetailPage items={items} id={0} img={photo}/>}></Route>
+        {/* <Route path='/detail/1' element={<DetailPage items={items} id={1} img={photo}/>}></Route>
+        <Route path='/detail/2' element={<DetailPage items={items} id={2} img={photo}/>}></Route> */}
+        <Route path='/about' element={<AboutPage/>}>
+          <Route path='address' element={<div>주소</div>}></Route>
+          <Route path='location' element={<div>위치</div>}></Route>
+        </Route>
+        <Route path='/about/member' element={<div>어바웃 멤버페이지</div>}></Route>
+        <Route path='/#' element={<div>그 외의 페이지(404)</div>}></Route>
       </Routes>
 
-      
+      {/* 리액트는 하나의 html을 다시 그리는 방식이기 때문에
+      html 을 이동하는 <a>태그 보다는 리액트 라우터의 <Link>를 사용 */}
+      <Link to="/about/address"><Button>리액트 부트스트랩 버튼</Button></Link>
+      <a href='/about/location'>a태그로 이동</a>
 
       <br/>
       {/* <Button variant="primary">기본버튼</Button>{' '} */}
@@ -96,6 +108,17 @@ function ItemCol(props){
           <h4>{props.data.title}</h4>
           <p>{props.data.price} 마리</p>
       </Col>
+    </>
+  )
+}
+
+
+// 어바웃 페이지의 컴포넌트
+function AboutPage(){
+  return(
+    <>
+      <div>어바웃 페이지</div>
+      {/* Outlet 으로 중첩Route의 위치를 결정 */}
     </>
   )
 }
